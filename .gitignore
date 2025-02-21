@@ -1,0 +1,40 @@
+# Unityが生成する一時ファイルやキャッシュ
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+UserSettings/
+MemoryCaptures/
+
+# プラグインやキャッシュの設定
+.vscode/
+.idea/
+*.csproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.opendb
+*.VC.db
+
+# Gitで管理すべきフォルダを明示
+!Assets/
+!Assets/**
+!ProjectSettings/
+!Packages/
+
+# Git管理しないが、手元に残したいファイル
+.DS_Store
+*.apk
+*.unitypackage
+*.log
+
+# .gitignore ファイル自体はGitで管理
+!.gitignore
+
