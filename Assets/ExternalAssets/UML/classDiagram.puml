@@ -1,0 +1,137 @@
+@startuml ARSystemClassDiagram
+title AR System Class Diagram
+
+' ---- インターフェース群 ----
+interface IHighlightable {
+    + void Highlight()
+    + void ResetHighlight()
+}
+
+interface IRotateable {
+    + void Rotate(float angle)
+}
+
+interface IScalable {
+    + void ScaleUp()
+    + void ScaleDown()
+}
+
+interface IShowable {
+    + void Show()
+    + void Hide()
+}
+
+' ---- 基底クラス ----
+abstract class Component {
+    + int ComponentID
+    + int GameObjectID
+}
+
+' ---- コマンドパターン ----
+interface ICommand {
+    + void Execute()
+    + void Undo()
+}
+
+class HighlightCommand implements ICommand
+class ScaleCommand implements ICommand
+class RotateCommand implements ICommand
+class VisibilityCommand implements ICommand
+
+' ---- 操作管理クラス ----
+class OperationManager {
+    - List<ICommand> commandHistory
+    + void ExecuteCommand(ICommand command)
+    + void UndoLastCommand()
+}
+
+note right of OperationManager
+コマンドパターンを用いて操作を管理。  
+拡大、回転、表示非表示の操作履歴を保持し、Undo機能を提供。
+end note
+
+' ---- 主要クラス ----
+class GameObject {
+    + int GameObjectID
+    + string Name
+    + Transform transform
+    + void UpdateTransform(Transform newTransform)
+    + Transform GetTransform()
+}
+
+class Transform {
+    + Vector3 Position
+    + Vector3 Scale
+    + Quaternion Rotation
+}
+
+class Model3DComponent extends Component implements IRotateable, IScalable, IShowable {
+    + int Model3DID
+    + string ModelName
+    - List<PartComponent> parts
+    + List<PartComponent> GetParts()
+}
+note right of Model3DComponent
+3Dモデルを表現すコンポーネント。  
+拡大・縮小、回転、表示非表示機能を提供。
+end note
+
+class PartComponent implements IHighlightable {
+    + int PartID
+    + string PartName
+}
+
+note right of PartComponent
+3Dモデルの一部。  
+ハイライト機能を提供。
+end note
+
+' ARカメラクラス
+class ARCamera {
+    + void StartTracking()
+    + void StopTracking()
+}
+
+note right of ARCamera
+ARカメラを制御し、トラッキングを開始・停止する。
+end note
+
+class QrCodeScanner {
+    + string ScanQRCode()
+}
+
+note right of QrCodeScanner
+QRコードをスキャンし、データを返す。  
+GameObjectManagerがデータを受け取り、オブジェクトを生成する。
+end note
+
+' GameObject管理クラス
+class GameObjectManager {
+    - Dictionary<string, GameObject> loadedObjects
+    + void Load3DObject(string qrCodeData)
+    + void AddGameObject(string id, GameObject obj)
+    + void RemoveGameObject(string id)
+}
+
+note right of GameObjectManager
+ゲームオブジェクトのロードと管理を行う。  
+QRコードデータに基づき3Dオブジェクトを生成。
+end note
+
+
+' ---- 関係整理 ----
+OperationManager --> ICommand : executes
+HighlightCommand --> IHighlightable : targets
+ScaleCommand --> IScalable : targets
+RotateCommand --> IRotateable : targets
+VisibilityCommand --> IShowable : targets
+
+GameObject *-- "1" Transform : has
+GameObject *-- "1..*" Component : has
+Model3DComponent *-- "1..*" PartComponent : has (composition)
+
+ARCamera --> QrCodeScanner : uses
+QrCodeScanner --> GameObjectManager : triggers load
+GameObjectManager *-- "1..*" GameObject : manages
+
+@enduml
