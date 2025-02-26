@@ -1,0 +1,33 @@
+@startuml ARSystemSequenceDiagram
+title 3Dモデル表示のシーケンス図
+
+actor User
+participant ARCamera as AC
+participant QRCodeScanner as QR
+participant GameObjectManager as GM
+participant GameObject as GO
+participant Model3DComponent as M3D
+participant Transform as T
+
+note right of User : ユーザーがアプリを起動し\nARトラッキングを開始します。
+User -> AC : StartTracking()
+AC -> AC : トラッキング開始
+
+note left of QR : QRコードスキャナーが\nカメラ映像からQRを読み取ります。
+User -> QR : Scan QR Code
+
+note left of GM : GameObjectManagerが\n3Dモデルをロードします。
+QR -> GM : Load3DObject(QR Code Data)
+GM -> GO : Instantiate()
+
+note right of GO : 3Dモデルデータを取得し\nGameObjectに返します。
+GO -> M3D : LoadModel()
+M3D --> GO : Return Model Data
+
+note right of GO : Transform情報（位置・回転・スケール）を設定
+GO -> T : SetTransform(Position, Rotation, Scale)
+T --> GO : Apply Transform
+GO --> GM : OK
+GM --> User : Display 3D Model
+
+@enduml

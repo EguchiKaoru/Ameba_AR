@@ -1,0 +1,110 @@
+@startuml AREntityRelationshipDiagram
+
+title AR System Entity Relationship Diagram
+
+' ---- テーブル定義 ----
+entity GameObject {
+    GameObjectID: int (PK)
+    Name: string
+    Position: Vector3
+    Scale: Vector3
+    Rotation: Quaternion
+}
+
+note right of GameObject
+ゲームオブジェクトの基本情報を保持。
+end note
+
+entity Transform {
+    TransformID: int (PK)
+    Position: Vector3
+    Scale: Vector3
+    Rotation: Quaternion
+}
+
+note right of Transform
+位置、スケール、回転を表す。
+end note
+
+entity Component {
+    ComponentID: int (PK)
+    GameObjectID: int (FK)
+    Type: string
+}
+
+note right of Component
+ゲームオブジェクトに紐づく汎用コンポーネント。
+end note
+
+entity Model3DComponent {
+    Model3DID: int (PK)
+    ComponentID: int (FK)
+    ModelName: string
+}
+
+note right of Model3DComponent
+3Dモデルを表現するコンポーネント。
+end note
+
+entity PartComponent {
+    PartID: int (PK)
+    Model3DID: int (FK)
+    PartName: string
+}
+
+note right of PartComponent
+3Dモデルの部材（パーツ）情報。
+end note
+
+entity OperationManager {
+    OperationID: int (PK)
+    CommandType: string
+    TargetComponentID: int (FK, nullable)
+    Parameters: string
+    Timestamp: datetime
+}
+
+note right of OperationManager
+操作コマンドを管理し、履歴を保持。
+end note
+
+entity QRCode {
+    QRCodeID: int (PK)
+    Data: string
+    RegistrationDate: datetime
+}
+
+note right of QRCode
+QRコードの情報を保持。
+end note
+
+entity ARCamera {
+    ARCameraID: int (PK)
+    Status: string  ' Active/Inactive
+}
+
+note right of ARCamera
+ARカメラを制御し、トラッキングを提供。
+end note
+
+entity QrCodeScanner {
+    ScannerID: int (PK)
+    LastScannedData: string
+    Timestamp: datetime
+}
+
+note right of QrCodeScanner
+QRコードをスキャンし、対応するデータを管理。
+end note
+
+' ---- 関係性定義 ----
+GameObject ||--o| Transform : has
+GameObject ||--o{ Component : includes
+Component ||--|| Model3DComponent : specializes
+Model3DComponent ||--o{ PartComponent : consists of
+QRCode ||--o{ GameObject : initializes
+OperationManager ||--o{ Component : operates
+ARCamera ||--o{ QrCodeScanner : uses
+QrCodeScanner ||--|{ QRCode : scans
+
+@enduml
