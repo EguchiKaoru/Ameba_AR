@@ -505,8 +505,8 @@ MonoBehaviour:
   m_Camera: {fileID: 1852195754}
   m_OriginBaseGameObject: {fileID: 1727099138}
   m_CameraFloorOffsetObject: {fileID: 165621182}
-  m_RequestedTrackingOriginMode: 1
-  m_CameraYOffset: 0.5
+  m_RequestedTrackingOriginMode: 2
+  m_CameraYOffset: 1
 --- !u!4 &1727099141
 Transform:
   m_ObjectHideFlags: 0
@@ -530,7 +530,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1727099138}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 10b9ccd2222ce5041a5a43b48f311d42, type: 3}
   m_Name: 
@@ -538,9 +538,9 @@ MonoBehaviour:
   arTrackedImageManager: {fileID: 1727099139}
   markerNameToPrefab:
   - name: marker01
-    prefab: {fileID: 919132149155446097, guid: 86fee093bb2676d4884157b2bc4f5e51, type: 3}
+    prefab: {fileID: 5565812874314574808, guid: 686a8c29ead319348b258619f6b6401e, type: 3}
   - name: "\u57FA\u790E_DD 1"
-    prefab: {fileID: 919132149155446097, guid: 31c82d6936adb6d41990581dcc1c4792, type: 3}
+    prefab: {fileID: 4265842269926222098, guid: ee65c09c4fc2b2344af96ebcc107d3a0, type: 3}
 --- !u!1 &1838810918
 GameObject:
   m_ObjectHideFlags: 0
