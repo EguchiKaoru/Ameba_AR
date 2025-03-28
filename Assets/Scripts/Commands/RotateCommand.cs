@@ -1,6 +1,8 @@
 using UnityEngine;
 
-// RotateCommandFƒ‚ƒfƒ‹‚ğw’èŠp“x‰ñ“]‚³‚¹‚éƒRƒ}ƒ“ƒh
+/// <summary>
+/// ãƒ¢ãƒ‡ãƒ«ã‚’å›è»¢ã•ã›ã‚‹ã‚³ãƒãƒ³ãƒ‰
+/// </summary>
 public class RotateCommand : ICommand
 {
     private Transform model;
@@ -15,6 +17,6 @@ public class RotateCommand : ICommand
     public void Execute()
     {
         model.Rotate(Vector3.up, angle);
-        Debug.Log($"RotateCommand executed: {angle} degrees rotated");
+        Debug.Log($"[RotateCommand] {angle} degrees rotated");
     }
 }

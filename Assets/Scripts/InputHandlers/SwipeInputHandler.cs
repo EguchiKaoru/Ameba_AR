@@ -1,20 +1,20 @@
 using UnityEngine;
 
-public class SwipeToRotate : MonoBehaviour
+/// <summary>
+/// ã‚¹ãƒ¯ã‚¤ãƒ—å…¥åŠ›ã‚’æ¤œçŸ¥ã—ã€å›è»¢ã‚³ãƒãƒ³ãƒ‰ã‚’å®Ÿè¡Œã™ã‚‹ãƒãƒ³ãƒ‰ãƒ©
+/// </summary>
+public class SwipeInputHandler : MonoBehaviour, IInputHandler
 {
+    [SerializeField] private CommandInvoker invoker;
+    [SerializeField] private float rotationSpeed = 0.2f;
+
     private Vector2 startTouchPosition;
-    private Vector2 currentTouchPosition;
     private bool isSwiping = false;
-    public float rotationSpeed = 0.2f;
 
-    private Quaternion targetRotation; // ‰i‘±“I‚É•Û‚·‚é‰ñ“]
-
-    void Start()
-    {
-        targetRotation = transform.rotation; // ‰Šú‚Ì‰ñ“]‚ğ•Û‘¶
-    }
-
-    void Update()
+    /// <summary>
+    /// å…¥åŠ›ã‚’å‡¦ç†ã™ã‚‹
+    /// </summary>
+    public void ProcessInput()
     {
         if (Input.touchCount == 1)
         {
@@ -30,15 +30,14 @@ public class SwipeToRotate : MonoBehaviour
                 case TouchPhase.Moved:
                     if (isSwiping)
                     {
-                        currentTouchPosition = touch.position;
+                        Vector2 currentTouchPosition = touch.position;
                         Vector2 delta = currentTouchPosition - startTouchPosition;
 
-                        // Y²‰ñ“]
                         float rotationY = delta.x * rotationSpeed;
 
-                        // XV‚³‚ê‚½‰ñ“]‚ğ“K—piworldRotationj
-                        targetRotation *= Quaternion.Euler(0, -rotationY, 0);
-                        transform.rotation = targetRotation;
+                        // å›è»¢ã‚³ãƒãƒ³ãƒ‰ã‚’ç”Ÿæˆã—ã¦å®Ÿè¡Œ
+                        var rotateCmd = new RotateCommand(transform, -rotationY);
+                        invoker.ExecuteCommand(rotateCmd);
 
                         startTouchPosition = currentTouchPosition;
                     }
@@ -51,6 +50,9 @@ public class SwipeToRotate : MonoBehaviour
             }
         }
     }
+
+    private void Update()
+    {
+        ProcessInput();
+    }
 }
-
-

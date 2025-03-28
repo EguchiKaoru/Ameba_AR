@@ -1,6 +1,8 @@
 using UnityEngine;
 
-// ScaleCommandFƒ‚ƒfƒ‹‚ğw’è‚Ì”{—¦‚ÅŠg‘åEk¬‚³‚¹‚éƒRƒ}ƒ“ƒh
+/// <summary>
+/// ãƒ¢ãƒ‡ãƒ«ã‚’æ‹¡å¤§ãƒ»ç¸®å°ã•ã›ã‚‹ã‚³ãƒãƒ³ãƒ‰
+/// </summary>
 public class ScaleCommand : ICommand
 {
     private Transform model;
@@ -15,6 +17,6 @@ public class ScaleCommand : ICommand
     public void Execute()
     {
         model.localScale = Vector3.Scale(model.localScale, scaleFactor);
-        Debug.Log($"ScaleCommand executed: scale factor {scaleFactor}");
+        Debug.Log($"[ScaleCommand] scale factor {scaleFactor}");
     }
 }

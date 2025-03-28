@@ -2,33 +2,32 @@ using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 
+/// <summary>
+/// ARTrackedImageManagerã®ã‚¤ãƒ™ãƒ³ãƒˆã‚’å—ã‘å–ã‚Šã€å¯¾å¿œã™ã‚‹Prefabã‚’ç”Ÿæˆã™ã‚‹ã‚µãƒ³ãƒ—ãƒ«
+/// </summary>
 public class ARMarkerDetector : MonoBehaviour
 {
-    public ARTrackedImageManager trackedImageManager;
-    public GameObject modelPrefab; // Šeƒ}[ƒJ[‚É‘Î‰‚·‚éƒvƒŒƒnƒu
-    public CommandInvoker invoker; // Šeƒ‚ƒfƒ‹‚É‹¤’Ê‚ÌCommandInvoker‚ğg—p
+    [SerializeField] private ARTrackedImageManager trackedImageManager;
+    [SerializeField] private GameObject modelPrefab;
+    [SerializeField] private CommandInvoker invoker;
 
     private void OnEnable()
     {
-        trackedImageManager.trackedImagesChanged += OnTrackedImagesChanged;
+        if (trackedImageManager != null)
+            trackedImageManager.trackedImagesChanged += OnTrackedImagesChanged;
     }
 
     private void OnDisable()
     {
-        trackedImageManager.trackedImagesChanged -= OnTrackedImagesChanged;
+        if (trackedImageManager != null)
+            trackedImageManager.trackedImagesChanged -= OnTrackedImagesChanged;
     }
 
     private void OnTrackedImagesChanged(ARTrackedImagesChangedEventArgs eventArgs)
     {
-        // -----------------------------
-        // V‚½‚ÉŒŸo‚³‚ê‚½ƒ}[ƒJ[
-        // -----------------------------
         foreach (var trackedImage in eventArgs.added)
         {
-            // ƒ}[ƒJ[‚ÌˆÊ’uE‰ñ“]‚É‡‚í‚¹‚Äƒ‚ƒfƒ‹‚ğ¶¬
             var modelInstance = Instantiate(modelPrefab, trackedImage.transform.position, trackedImage.transform.rotation);
-
-            // ModelControllerƒRƒ“ƒ|[ƒlƒ“ƒg‚ÉInvoker‚ğƒZƒbƒg
             var modelController = modelInstance.GetComponent<ModelController>();
             if (modelController != null)
             {
@@ -36,20 +35,14 @@ public class ARMarkerDetector : MonoBehaviour
             }
         }
 
-        // -----------------------------
-        // Šù‘¶‚Ìƒ}[ƒJ[‚ªXV‚³‚ê‚½ê‡
-        // -----------------------------
         foreach (var trackedImage in eventArgs.updated)
         {
-            // ˆÊ’u‚âó‘Ô‚ÌXV‚ª•K—v‚È‚ç‚±‚±‚ÅÀ‘•
+            // å¿…è¦ã«å¿œã˜ã¦ä½ç½®ãƒ»å›è»¢ã®æ›´æ–°ãªã©
         }
 
-        // -----------------------------
-        // ƒ}[ƒJ[‚ªíœ‚³‚ê‚½ê‡
-        // -----------------------------
         foreach (var trackedImage in eventArgs.removed)
         {
-            // ŠY“–ƒ}[ƒJ[‚É•R‚Ã‚¢‚½ƒIƒuƒWƒFƒNƒg‚ğ”ñ•\¦/íœ‚·‚éˆ—‚È‚Ç
+            // ãƒãƒ¼ã‚«ãƒ¼ãŒè¦‹ãˆãªããªã£ãŸéš›ã®å‡¦ç†ï¼ˆã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆå‰Šé™¤ãªã©ï¼‰
         }
     }
 }

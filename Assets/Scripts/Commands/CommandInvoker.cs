@@ -1,11 +1,13 @@
 using UnityEngine;
 
-// CommandInvokerFƒRƒ}ƒ“ƒh‚ðŽó‚¯Žæ‚èŽÀs‚·‚éƒNƒ‰ƒX
+/// <summary>
+/// ã‚³ãƒžãƒ³ãƒ‰å®Ÿè¡Œã‚’ç®¡ç†ã™ã‚‹ã‚¯ãƒ©ã‚¹
+/// </summary>
 public class CommandInvoker : MonoBehaviour
 {
     public void ExecuteCommand(ICommand command)
     {
         command.Execute();
-        // •K—v‚É‰ž‚¶‚Ä‚±‚±‚Å‚³‚ç‚ÉƒƒOŠÇ—‚â—š—ðŠÇ—iUndo‚È‚Çj‚ð’Ç‰Á‰Â”\
+        // å¿…è¦ã«å¿œã˜ã¦ã‚³ãƒžãƒ³ãƒ‰ã®å±¥æ­´ç®¡ç†ãªã©ã‚’è¿½åŠ 
     }
 }

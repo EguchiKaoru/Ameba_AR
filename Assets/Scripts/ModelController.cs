@@ -1,21 +1,21 @@
 using UnityEngine;
 
-// ModelControllerF•\¦‚³‚ê‚½ƒ‚ƒfƒ‹‚É‘Î‚µ‚Ä‘€ì‚ğs‚¤ƒNƒ‰ƒX
+/// <summary>
+/// ãƒãƒ¼ã‚«ãƒ¼ã§ç”Ÿæˆã•ã‚ŒãŸãƒ¢ãƒ‡ãƒ«ãªã©ã«ã‚¢ã‚¿ãƒƒãƒã—ã¦ã€UIãƒœã‚¿ãƒ³ã‹ã‚‰ç›´æ¥ã‚³ãƒãƒ³ãƒ‰ã‚’å®Ÿè¡Œã™ã‚‹ä¾‹
+/// </summary>
 public class ModelController : MonoBehaviour
 {
-    // ƒCƒ“ƒXƒyƒNƒ^‚©‚çCommandInvoker‚ğƒAƒ^ƒbƒ`‚·‚é‚©AƒV[ƒ““à‚ÌƒVƒ“ƒOƒ‹ƒgƒ“‚È‚Ç‚ğ—˜—p
     public CommandInvoker invoker;
 
-    // ƒ†[ƒU“ü—Í‚È‚Ç‚É‰‚¶‚½‘€ìƒƒ\ƒbƒh
     public void RotateModel(float angle)
     {
-        ICommand rotateCommand = new RotateCommand(transform, angle);
+        var rotateCommand = new RotateCommand(transform, angle);
         invoker.ExecuteCommand(rotateCommand);
     }
 
     public void ScaleModel(Vector3 scaleFactor)
     {
-        ICommand scaleCommand = new ScaleCommand(transform, scaleFactor);
+        var scaleCommand = new ScaleCommand(transform, scaleFactor);
         invoker.ExecuteCommand(scaleCommand);
     }
 }

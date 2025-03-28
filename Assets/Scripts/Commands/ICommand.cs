@@ -1,6 +1,8 @@
 using UnityEngine;
 
-// ICommandインターフェース：すべてのコマンドはこのインターフェースを実装する
+/// <summary>
+/// 縺吶∋縺ｦ縺ｮ繧ｳ繝槭Φ繝峨′螳溯｣�縺吶ｋ繧､繝ｳ繧ｿ繝ｼ繝輔ぉ繝ｼ繧ｹ
+/// </summary>
 public interface ICommand
 {
     void Execute();
