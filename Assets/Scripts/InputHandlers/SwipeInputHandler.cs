@@ -39,6 +39,9 @@ public class SwipeInputHandler : MonoBehaviour, IInputHandler
                         var rotateCmd = new RotateCommand(transform, -rotationY);
                         invoker.ExecuteCommand(rotateCmd);
 
+
+                        Debug.Log($"delta={delta} angle={rotationY}");
+                        
                         startTouchPosition = currentTouchPosition;
                     }
                     break;
@@ -49,10 +52,5 @@ public class SwipeInputHandler : MonoBehaviour, IInputHandler
                     break;
             }
         }
-    }
-
-    private void Update()
-    {
-        ProcessInput();
     }
 }

@@ -42,9 +42,4 @@ public class PinchInputHandler : MonoBehaviour, IInputHandler
             isPinching = false;
         }
     }
-
-    private void Update()
-    {
-        ProcessInput();
-    }
 }
