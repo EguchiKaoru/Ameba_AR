@@ -10,7 +10,6 @@ public class PinchInputHandler : MonoBehaviour, IInputHandler
 
     private float lastDistance = 0f;
     private bool isPinching = false;
-
     public void ProcessInput()
     {
         if (Input.touchCount == 2)
@@ -28,12 +27,16 @@ public class PinchInputHandler : MonoBehaviour, IInputHandler
                 float currentDistance = Vector2.Distance(t1.position, t2.position);
                 float diff = currentDistance - lastDistance;
 
-                float scaleFactorValue = 1 + (diff * scaleSpeed);
-                Vector3 scaleFactor = new Vector3(scaleFactorValue, scaleFactorValue, scaleFactorValue);
+                // 差分が微小ならスキップする（閾値: 1ピクセルなど）
+                if (Mathf.Abs(diff) >= 1f)
+                {
+                    float scaleFactorValue = 1 + (diff * scaleSpeed);
+                    Vector3 scaleFactor = new Vector3(scaleFactorValue, scaleFactorValue, scaleFactorValue);
+                    Debug.Log($"Pinch diff: {diff}, scale factor: {scaleFactorValue}");
 
-                var scaleCmd = new ScaleCommand(transform, scaleFactor);
-                invoker.ExecuteCommand(scaleCmd);
-
+                    var scaleCmd = new ScaleCommand(transform, scaleFactor);
+                    invoker.ExecuteCommand(scaleCmd);
+                }
                 lastDistance = currentDistance;
             }
         }
@@ -42,4 +45,5 @@ public class PinchInputHandler : MonoBehaviour, IInputHandler
             isPinching = false;
         }
     }
+
 }

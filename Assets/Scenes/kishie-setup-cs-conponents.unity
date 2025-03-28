@@ -953,7 +953,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   trackedImageManager: {fileID: 1727099139}
-  modelPrefab: {fileID: 3828794636054448732, guid: acd7d57714494984b81bf4d1c0e59621, type: 3}
+  modelPrefab: {fileID: 4764232738401788500, guid: 0fb2dbe55ed30e34f85965a5a5962d77, type: 3}
   invoker: {fileID: 1976013290}
 --- !u!1 &1838810918
 GameObject:

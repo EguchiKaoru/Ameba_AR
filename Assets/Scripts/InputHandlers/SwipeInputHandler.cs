@@ -32,16 +32,16 @@ public class SwipeInputHandler : MonoBehaviour, IInputHandler
                     {
                         Vector2 currentTouchPosition = touch.position;
                         Vector2 delta = currentTouchPosition - startTouchPosition;
-
                         float rotationY = delta.x * rotationSpeed;
 
-                        // 回転コマンドを生成して実行
-                        var rotateCmd = new RotateCommand(transform, -rotationY);
-                        invoker.ExecuteCommand(rotateCmd);
+                        // 微小な変化ならログ出力しない（閾値: 1）
+                        if (Mathf.Abs(delta.x) >= 1f)
+                        {
+                            Debug.Log($"Swipe delta: {delta}, calculated rotation: {rotationY}");
+                            var rotateCmd = new RotateCommand(transform, -rotationY);
+                            invoker.ExecuteCommand(rotateCmd);
+                        }
 
-
-                        Debug.Log($"delta={delta} angle={rotationY}");
-                        
                         startTouchPosition = currentTouchPosition;
                     }
                     break;
@@ -53,4 +53,5 @@ public class SwipeInputHandler : MonoBehaviour, IInputHandler
             }
         }
     }
+
 }
