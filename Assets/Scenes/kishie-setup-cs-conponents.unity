@@ -322,6 +322,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &289543401
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 289543402}
+  m_Layer: 0
+  m_Name: modelsContainer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &289543402
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 289543401}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &481161097
 GameObject:
   m_ObjectHideFlags: 0
@@ -955,6 +986,7 @@ MonoBehaviour:
   trackedImageManager: {fileID: 1727099139}
   modelPrefab: {fileID: 4764232738401788500, guid: 0fb2dbe55ed30e34f85965a5a5962d77, type: 3}
   invoker: {fileID: 1976013290}
+  modelsContainer: {fileID: 289543402}
 --- !u!1 &1838810918
 GameObject:
   m_ObjectHideFlags: 0
@@ -1593,3 +1625,4 @@ SceneRoots:
   - {fileID: 1550115574}
   - {fileID: 226661046}
   - {fileID: 2082562895}
+  - {fileID: 289543402}

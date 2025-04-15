@@ -4,7 +4,7 @@ using UnityEngine.XR.ARSubsystems;
 
 /// <summary>
 /// ARTrackedImageManager のイベントを受け取り、対応する Prefab を生成するサンプル
-/// (生成時にモデルをトラッキング対象の子から切り離す)
+/// (生成時に専用のコンテナに配置して、トラッキング対象の子から切り離す)
 /// </summary>
 public class ARMarkerDetector : MonoBehaviour
 {
@@ -12,8 +12,8 @@ public class ARMarkerDetector : MonoBehaviour
     [SerializeField] private GameObject modelPrefab;
     [SerializeField] private CommandInvoker invoker;
 
-    // 【オプション】モデルを別のコンテナに入れたい場合は、下記のコメントを外して使ってください
-    // [SerializeField] private Transform modelsContainer;
+    // モデルを配置する専用コンテナを設定（シーン上の空のオブジェクトを用意して、ここに割り当てる）
+    [SerializeField] private Transform modelsContainer;
 
     private void OnEnable()
     {
@@ -29,39 +29,40 @@ public class ARMarkerDetector : MonoBehaviour
 
     private void OnTrackedImagesChanged(ARTrackedImagesChangedEventArgs eventArgs)
     {
-        // マーカーが新たに検出されたとき
+        // 新たに検出されたマーカーに対してモデルを生成
         foreach (var trackedImage in eventArgs.added)
         {
             Debug.Log($"Tracked image added: {trackedImage.referenceImage.name}");
 
-            // Instantiate 時に親を指定しない（または、必要なら別のコンテナに配置する）
-            GameObject modelInstance = Instantiate(modelPrefab, trackedImage.transform.position, trackedImage.transform.rotation);
-            // 【オプション】モデルを特定のコンテナに配置する場合
-            // GameObject modelInstance = Instantiate(modelPrefab, trackedImage.transform.position, trackedImage.transform.rotation, modelsContainer);
+            // Instantiate 時に、親として modelsContainer を指定することで、
+            // 生成されたモデルは ARTrackedImage の子ではなく、専用コンテナの子になる
+            var modelInstance = Instantiate(modelPrefab,
+                                            trackedImage.transform.position,
+                                            trackedImage.transform.rotation,
+                                            modelsContainer);
 
-            // ModelController コンポーネントがあればシーン上の CommandInvoker を注入
-            ModelController modelController = modelInstance.GetComponent<ModelController>();
+            var modelController = modelInstance.GetComponent<ModelController>();
             if (modelController != null)
             {
                 modelController.invoker = invoker;
             }
         }
 
-        // マーカーの更新（Tracking 状態の変化に応じて必要な処理を追加）
+        // マーカーの更新（例として、Tracking 状態が Tracking の場合のみログ出力）
         foreach (var trackedImage in eventArgs.updated)
         {
             if (trackedImage.trackingState == TrackingState.Tracking)
             {
                 Debug.Log($"Tracked image is tracking: {trackedImage.referenceImage.name}");
             }
-            // ここで、ユーザー操作のオフセットを適用する等の処理を追加することも検討できる
         }
 
-        // マーカーが失われたとき
+        // マーカーが失われたときの処理
         foreach (var trackedImage in eventArgs.removed)
         {
             Debug.Log($"Tracked image removed: {trackedImage.referenceImage.name}");
-            // ここで、生成済みのモデルの削除や非表示にする処理を追加してください
+            // 必要に応じて、生成済みモデルの削除処理などを追加する
+            Debug.Log($"必要に応じて、生成済みモデルの削除処理などを追加する: {trackedImage.referenceImage.name}");
         }
     }
 }
