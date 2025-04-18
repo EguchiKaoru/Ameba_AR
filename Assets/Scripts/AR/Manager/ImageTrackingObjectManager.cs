@@ -2,10 +2,6 @@
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
-// ARObjectFactory を宣言している名前空間があれば using を追加してください。
-// グローバル名前空間（namespace 宣言なし）で定義している場合、以下は不要です。
-// using YourNamespace.AR.Factory;
-
 
 /// <summary>
 /// ARFoundation の Tracked Image Manager イベント（ARTrackedImageManager：ARマーカー検出機能）を受け取り、
@@ -16,38 +12,47 @@ using UnityEngine.XR.ARSubsystems;
 public class ImageTrackingObjectManager : MonoBehaviour
 {
     /// <summary>
-    /// AR Tracked Image Manager コンポーネントへの参照。
-    /// Inspector でシーン内の ARTrackedImageManager を割り当ててください。
+    /// 同じ GameObject にアタッチされた ARTrackedImageManager を自動取得します。
     /// </summary>
-    [SerializeField]
     private ARTrackedImageManager trackedImageManager;
 
     /// <summary>
-    /// MonoBehaviour が有効化された際に呼ばれる。
-    /// trackedImageManager の trackedImagesChanged イベントにハンドラを登録する。
+    /// 起動時に呼ばれ、trackedImageManager を取得します。
+    /// </summary>
+    private void Awake()
+    {
+        trackedImageManager = GetComponent<ARTrackedImageManager>();
+    }
+
+    /// <summary>
+    /// 有効化時に trackedImagesChanged イベントにハンドラを登録します。
     /// </summary>
     private void OnEnable()
     {
-        trackedImageManager.trackedImagesChanged += OnTrackedImagesChanged;
+        if (trackedImageManager != null)
+        {
+            trackedImageManager.trackedImagesChanged += OnTrackedImagesChanged;
+        }
     }
 
     /// <summary>
-    /// MonoBehaviour が無効化される際に呼ばれる。
-    /// イベントハンドラを解除してメモリリークを防止する。
+    /// 無効化時に trackedImagesChanged イベントからハンドラを解除します。
     /// </summary>
     private void OnDisable()
     {
-        trackedImageManager.trackedImagesChanged -= OnTrackedImagesChanged;
+        if (trackedImageManager != null)
+        {
+            trackedImageManager.trackedImagesChanged -= OnTrackedImagesChanged;
+        }
     }
 
     /// <summary>
-    /// ARFoundation の画像追加・更新・削除イベントを受け取り、
-    /// Prefab の生成および表示制御を行う。
+    /// 画像の追加・更新・削除イベントを受け取り、Prefab の生成・表示制御を行います。
     /// </summary>
     /// <param name="args">trackedImagesChanged イベントの引数</param>
     private void OnTrackedImagesChanged(ARTrackedImagesChangedEventArgs args)
     {
-        // 1) 新たに検出されたマーカーに対し Factory を使って Prefab を生成
+        // 1) 新規検出されたマーカーに対し、Factory 経由で Prefab を生成
         foreach (var trackedImage in args.added)
         {
             ARObjectFactory.Create(
@@ -56,7 +61,7 @@ public class ImageTrackingObjectManager : MonoBehaviour
             );
         }
 
-        // 2) 既存マーカーの追跡状態が変化した際の表示制御
+        // 2) トラッキング状態が変化した既存マーカーの表示／非表示を切り替え
         foreach (var trackedImage in args.updated)
         {
             bool isTracking = trackedImage.trackingState == TrackingState.Tracking;
