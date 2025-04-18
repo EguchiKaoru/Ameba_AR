@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15c35a7e9504a20428f13f346c87c969, type: 3}
+  m_Name: DefaultPrefabRegistry
+  m_EditorClassIdentifier: 
+  entries:
+  - markerName: Foundation-D
+    prefab: {fileID: 2333692349765269585, guid: 98e958c361481e2449cf4b11c47082c2, type: 3}
+  - markerName: TNF2.0
+    prefab: {fileID: 8746564177072316668, guid: cae87c92ca041d5438db74dbe6dde0cf, type: 3}
