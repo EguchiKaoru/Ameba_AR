@@ -1,137 +1,157 @@
-@startuml ARSystemClassDiagram
-title AR System Class Diagram
+@startuml
 
-' ---- インターフェース群 ----
-interface IHighlightable {
-    + void Highlight()
-    + void ResetHighlight()
+' --- Config パッケージ ---
+package Config {
+    class ARPrefabRegistry
+    note right of ARPrefabRegistry
+        Prefab名からGameObjectを返す
+        インターフェース
+    end note
+
+    class DefaultPrefabRegistry
+    note right of DefaultPrefabRegistry
+        名前→Prefabのマップを保持する
+        ARPrefabRegistryの実装
+    end note
 }
 
-interface IRotateable {
-    + void Rotate(float angle)
+' --- Factory パッケージ ---
+package Factory {
+    class ARObjectFactory {
+        + Create(name: string, parent: Transform): void
+    }
+    note right of ARObjectFactory
+        RegistryからPrefabを取得し
+        インスタンスを生成・配置する
+    end note
 }
 
-interface IScalable {
-    + void ScaleUp()
-    + void ScaleDown()
+' --- Gesture パッケージ ---
+package Gesture {
+    interface IGestureHandler {
+        + OnDragStart(startPos: Vector2)
+        + OnDrag(delta: Vector2)
+        + OnDragEnd(endPos: Vector2)
+        + OnPinchStart(initialDistance: float)
+        + OnPinch(scaleFactor: float)
+        + OnPinchEnd()
+    }
+    note right of IGestureHandler
+        ジェスチャー処理の
+        Strategyインターフェース
+    end note
+
+    class PinchToScaleHandler {
+        - initialScale : Vector3
+        + OnPinchStart(initialDistance: float)
+        + OnPinch(scaleFactor: float)
+        + OnPinchEnd()
+    }
+    note right of PinchToScaleHandler
+        ピンチ操作でオブジェクトを
+        スケール制御
+    end note
+
+    class SwipeToRotateHandler {
+        - targetRotation : Quaternion
+        + rotationSpeed : float
+        + OnDragStart(startPosition: Vector2)
+        + OnDrag(delta: Vector2)
+        + OnDragEnd(endPosition: Vector2)
+    }
+    note right of SwipeToRotateHandler
+        ドラッグ操作でオブジェクトを
+        X軸、Y軸回転
+    end note
 }
 
-interface IShowable {
-    + void Show()
-    + void Hide()
+' --- Input パッケージ ---
+package Input {
+    class GestureInputManager {
+        + static Instance : GestureInputManager
+        - interactableLayerMask : LayerMask
+        - mainCamera : Camera
+        - activeHandlers : Dictionary<int, IGestureHandler>
+        - pinchActive : bool
+        - pinchHandler : IGestureHandler
+        - initialPinchDistance : float
+        + Update()
+        - HandleSingleTouch(touch: Touch)
+        - HandlePinch(touch1: Touch, touch2: Touch)
+        - EndPinch()
+    }
+    note right of GestureInputManager
+        タッチ入力を一元管理し、
+        IGestureHandlerに通知
+    end note
 }
 
-' ---- 基底クラス ----
-abstract class Component {
-    + int ComponentID
-    + int GameObjectID
+' --- Manager パッケージ ---
+package Manager {
+    class ImageTrackingController {
+        + OnTrackedImageDetected(name: string)
+    }
+    note right of ImageTrackingController
+        画像検出時にUIや他Managerを制御
+    end note
+
+    class ImageTrackingObjectManager {
+        - trackedImageManager : ARTrackedImageManager
+        + OnTrackedImagesChanged(args: ARTrackedImagesChangedEventArgs)
+    }
+    note right of ImageTrackingObjectManager
+        ARマーカー検出を監視し、
+        FactoryでPrefab生成・表示制御
+    end note
 }
 
-' ---- コマンドパターン ----
-interface ICommand {
-    + void Execute()
-    + void Undo()
-}
-
-class HighlightCommand implements ICommand
-class ScaleCommand implements ICommand
-class RotateCommand implements ICommand
-class VisibilityCommand implements ICommand
-
-' ---- 操作管理クラス ----
-class OperationManager {
-    - List<ICommand> commandHistory
-    + void ExecuteCommand(ICommand command)
-    + void UndoLastCommand()
-}
-
-note right of OperationManager
-コマンドパターンを用いて操作を管理。  
-拡大、回転、表示非表示の操作履歴を保持し、Undo機能を提供。
+' --- Unity組込みクラス ---
+class GameObject
+note right of GameObject
+    Unityのシーンオブジェクト
 end note
 
-' ---- 主要クラス ----
-class GameObject {
-    + int GameObjectID
-    + string Name
-    + Transform transform
-    + void UpdateTransform(Transform newTransform)
-    + Transform GetTransform()
-}
-
-class Transform {
-    + Vector3 Position
-    + Vector3 Scale
-    + Quaternion Rotation
-}
-
-class Model3DComponent extends Component implements IRotateable, IScalable, IShowable {
-    + int Model3DID
-    + string ModelName
-    - List<PartComponent> parts
-    + List<PartComponent> GetParts()
-}
-note right of Model3DComponent
-3Dモデルを表現すコンポーネント。  
-拡大・縮小、回転、表示非表示機能を提供。
+class ARTrackedImageManager
+note right of ARTrackedImageManager
+    ARTrackedImageの検出・更新イベント発行
 end note
 
-class PartComponent implements IHighlightable {
-    + int PartID
-    + string PartName
-}
-
-note right of PartComponent
-3Dモデルの一部。  
-ハイライト機能を提供。
+class ARTrackedImagesChangedEventArgs
+note right of ARTrackedImagesChangedEventArgs
+    画像追加・更新・削除リストを保持
 end note
 
-' ARカメラクラス
-class ARCamera {
-    + void StartTracking()
-    + void StopTracking()
-}
-
-note right of ARCamera
-ARカメラを制御し、トラッキングを開始・停止する。
+class Touch
+note right of Touch
+    タッチ情報(位置・フェーズ等)
 end note
 
-class QrCodeScanner {
-    + string ScanQRCode()
-}
-
-note right of QrCodeScanner
-QRコードをスキャンし、データを返す。  
-GameObjectManagerがデータを受け取り、オブジェクトを生成する。
+class LayerMask
+note right of LayerMask
+    Raycastフィルタ用のマスク
 end note
 
-' GameObject管理クラス
-class GameObjectManager {
-    - Dictionary<string, GameObject> loadedObjects
-    + void Load3DObject(string qrCodeData)
-    + void AddGameObject(string id, GameObject obj)
-    + void RemoveGameObject(string id)
-}
-
-note right of GameObjectManager
-ゲームオブジェクトのロードと管理を行う。  
-QRコードデータに基づき3Dオブジェクトを生成。
+class Camera
+note right of Camera
+    画面→ワールドのRayを生成
 end note
 
+' --- 関係 ---
+GestureInputManager ..> IGestureHandler : calls
+PinchToScaleHandler --|> IGestureHandler
+SwipeToRotateHandler --|> IGestureHandler
 
-' ---- 関係整理 ----
-OperationManager --> ICommand : executes
-HighlightCommand --> IHighlightable : targets
-ScaleCommand --> IScalable : targets
-RotateCommand --> IRotateable : targets
-VisibilityCommand --> IShowable : targets
+ImageTrackingObjectManager o-- ARObjectFactory : uses
+ImageTrackingObjectManager --> ARTrackedImageManager
+ImageTrackingController --> ImageTrackingObjectManager : coordinates
 
-GameObject *-- "1" Transform : has
-GameObject *-- "1..*" Component : has
-Model3DComponent *-- "1..*" PartComponent : has (composition)
+GestureInputManager --> GameObject : raycasts to
+GameObject --> IGestureHandler : has
+ARObjectFactory --> GameObject : instantiates
 
-ARCamera --> QrCodeScanner : uses
-QrCodeScanner --> GameObjectManager : triggers load
-GameObjectManager *-- "1..*" GameObject : manages
+GestureInputManager --> Touch : processes
+GestureInputManager --> LayerMask : filters
+GestureInputManager --> Camera : uses
+ImageTrackingController --> ARTrackedImageManager : uses
 
 @enduml
