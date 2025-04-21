@@ -1,37 +1,57 @@
 // File: SwipeToRotateHandler.cs
 using UnityEngine;
 
-/// <summary>
-/// IGestureHandler 実装：ドラッグ操作によりアタッチオブジェクトを Y 軸回転させます。
-/// </summary>
 [RequireComponent(typeof(Transform))]
 public class SwipeToRotateHandler : MonoBehaviour, IGestureHandler
 {
     private Quaternion targetRotation;
+    private Camera mainCamera;
+    [Tooltip("スワイプ移動量あたりの回転速度")]
     public float rotationSpeed = 0.2f;
 
     void Awake()
     {
-        // 初期回転を保存
         targetRotation = transform.rotation;
+        mainCamera = Camera.main;
     }
 
-    // OnDragStart: 必要なら開始位置を取得（今回は使用しない）
-    public void OnDragStart(Vector2 startPosition) { }
+    public void OnDragStart(Vector2 startPosition)
+    {
+        Debug.Log($"[Swipe] DragStart at {startPosition}");
+    }
 
-    // OnDrag: delta.x に基づき左右回転
     public void OnDrag(Vector2 delta)
     {
-        float rotationY = delta.x * rotationSpeed;
-        targetRotation *= Quaternion.Euler(0f, -rotationY, 0f);
+        // 水平ドラッグでヨー（Y軸回り）、垂直ドラッグでピッチ（X軸回り）
+        float yaw = delta.x * rotationSpeed;
+        float pitch = -delta.y * rotationSpeed;
+
+        // カメラ基準の軸
+        Vector3 upAxis = mainCamera.transform.up;
+        Vector3 rightAxis = mainCamera.transform.right;
+
+        // 回転を積み重ね
+        targetRotation = Quaternion.AngleAxis(yaw, upAxis) * targetRotation;
+        targetRotation = Quaternion.AngleAxis(pitch, rightAxis) * targetRotation;
+
         transform.rotation = targetRotation;
     }
 
-    // OnDragEnd: 終了時に何もしない
-    public void OnDragEnd(Vector2 endPosition) { }
+    public void OnDragEnd(Vector2 endPosition)
+    {
+        Debug.Log($"[Swipe] DragEnd at {endPosition}");
+    }
 
-    // 利用しないピンチ系メソッドは空実装
-    public void OnPinchStart(float initialDistance) { }
-    public void OnPinch(float scaleFactor) { }
-    public void OnPinchEnd() { }
+    public void OnPinchStart(float initialDistance)
+    {
+        // 未使用
+    }
+    public void OnPinch(float scaleFactor)
+    {
+        // 未使用
+    }
+    public void OnPinchEnd()
+    {
+        // 未使用
+    }
 }
