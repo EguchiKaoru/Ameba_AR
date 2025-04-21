@@ -7,11 +7,11 @@ public class SwipeToRotate : MonoBehaviour
     private bool isSwiping = false;
     public float rotationSpeed = 0.2f;
 
-    private Quaternion targetRotation; // ‰i‘±“I‚É•Û‚·‚é‰ñ“]
+    private Camera mainCamera;
 
     void Start()
     {
-        targetRotation = transform.rotation; // ‰Šú‚Ì‰ñ“]‚ğ•Û‘¶
+        mainCamera = Camera.main;
     }
 
     void Update()
@@ -33,12 +33,14 @@ public class SwipeToRotate : MonoBehaviour
                         currentTouchPosition = touch.position;
                         Vector2 delta = currentTouchPosition - startTouchPosition;
 
-                        // Y²‰ñ“]
                         float rotationY = delta.x * rotationSpeed;
+                        float rotationX = -delta.y * rotationSpeed;
 
-                        // XV‚³‚ê‚½‰ñ“]‚ğ“K—piworldRotationj
-                        targetRotation *= Quaternion.Euler(0, -rotationY, 0);
-                        transform.rotation = targetRotation;
+                        Vector3 camRight = mainCamera.transform.right;
+                        Vector3 camUp = mainCamera.transform.up;
+
+                        transform.Rotate(camUp, rotationY, Space.World);
+                        transform.Rotate(camRight, rotationX, Space.World);
 
                         startTouchPosition = currentTouchPosition;
                     }
@@ -52,5 +54,3 @@ public class SwipeToRotate : MonoBehaviour
         }
     }
 }
-
-
