@@ -813,7 +813,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_SerializedLibrary: {fileID: 11400000, guid: dff1d1ad3fbf8ec41b9b9acdab9b904b, type: 2}
-  m_MaxNumberOfMovingImages: 2
+  m_MaxNumberOfMovingImages: 1
   m_TrackedImagePrefab: {fileID: 0}
 --- !u!114 &1727099140
 MonoBehaviour:
@@ -830,7 +830,7 @@ MonoBehaviour:
   m_Camera: {fileID: 1852195754}
   m_OriginBaseGameObject: {fileID: 1727099138}
   m_CameraFloorOffsetObject: {fileID: 165621182}
-  m_RequestedTrackingOriginMode: 2
+  m_RequestedTrackingOriginMode: 0
   m_CameraYOffset: 1
 --- !u!4 &1727099141
 Transform:

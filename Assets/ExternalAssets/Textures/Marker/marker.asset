@@ -21,9 +21,9 @@ MonoBehaviour:
       m_GuidLow: 5620217036562713561
       m_GuidHigh: 5858927748192448917
     m_SerializedTextureGuid:
-      m_GuidLow: 6423451848231591039
-      m_GuidHigh: 9706649428963901497
-    m_Size: {x: 0.02, y: 0.02}
+      m_GuidLow: 3658262815339576137
+      m_GuidHigh: 14986369449297202312
+    m_Size: {x: 0.124632634, y: 0.09}
     m_SpecifySize: 1
     m_Name: TNF-2.0
     m_Texture: {fileID: 0}
